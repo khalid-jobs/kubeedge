@@ -59,6 +59,7 @@ import (
 	"k8s.io/kubernetes/pkg/kubelet/cm"
 	"k8s.io/kubernetes/pkg/kubelet/cm/cpumanager"
 	klconfigmap "k8s.io/kubernetes/pkg/kubelet/configmap"
+	klsecret "k8s.io/kubernetes/pkg/kubelet/secret"
 	kubecontainer "k8s.io/kubernetes/pkg/kubelet/container"
 	"k8s.io/kubernetes/pkg/kubelet/cri/remote"
 	"k8s.io/kubernetes/pkg/kubelet/cri/streaming"
@@ -248,6 +249,9 @@ type edged struct {
 
 	configMapManager klconfigmap.Manager
 
+	// Secret manager
+	secretManager klsecret.Manager
+
 	// Cached MachineInfo returned by cadvisor.
 	machineInfo *cadvisorapi.MachineInfo
 
@@ -302,6 +306,7 @@ func (e *edged) Start() {
 	e.hostUtil = hostutil.NewHostUtil()
 
 	e.configMapManager = klconfigmap.NewSimpleConfigMapManager(e.kubeClient)
+	e.secretManager = klsecret.NewSimpleSecretManager(e.kubeClient)
 
 	e.volumeManager = volumemanager.NewVolumeManager(
 		true,
