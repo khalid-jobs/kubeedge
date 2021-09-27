@@ -192,6 +192,7 @@ func signEdgeCert(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	klog.Infof("usages: %v", usages)
 	clientCertDER, err := signCerts(subject, csr.PublicKey, usages)
 	if err != nil {
 		klog.Errorf("fail to signCerts for edgenode:%s! error:%v", r.Header.Get(constants.NodeName), err)
